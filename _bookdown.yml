@@ -1,0 +1,38 @@
+book_filename: "stat764-portfolio"
+new_session: true
+before_chapter_script: _common.R
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files: [
+  "index.Rmd",
+  "0_1_January18th.Rmd",
+  "0_jan25thjournal.Rmd",
+  "1_Jan30thjournalRmd.Rmd",
+  "2_Feb1stjournal.Rmd",
+  "3_Feb6thjournal.Rmd",
+  "4_Feb8thjournal.Rmd",
+  "5_Feb13journal.Rmd",
+  "6_Feb15thjournal.Rmd",
+  "7_Feb20thjournal.Rmd",
+  "8_Feb22ndjournal.Rmd",
+  "9_Feb27thjournal.Rmd",
+  "10_Feb29thjournal.Rmd",
+  "11_March3rdjournal.Rmd",
+  "12_March7thjournal.Rmd",
+  "15_March19thjournal.Rmd",
+  "16_March21stjournal.Rmd",
+  "17_March26thjournal.Rmd",
+  "18_March28thjournal.Rmd",
+  "19_April2ndjournal.Rmd",
+  "20_April4thjournal.Rmd",
+  "20_April9thjournal.Rmd",
+  "21_April11thjournal.Rmd",
+  "22_April23rdjournal.Rmd",
+  "23_April25thjournal.Rmd",
+  "24_April30thjournal.Rmd",
+  "activity01.Rmd",
+  "activity2_NF.Rmd",
+  "activity3.Rmd"
+]
