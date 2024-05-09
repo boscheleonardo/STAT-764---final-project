@@ -17,6 +17,7 @@ library(raster)
 library(mgcv)
 library(ggplot2)
 library(dplyr)
+library(ggpubr)
 
 ```
 
@@ -88,6 +89,7 @@ Using Poisson distribution
 $$[y|\lambda] = Poisson(\lambda) $$
 
 $$\eta_s\sim MVN(0, \Sigma)$$
+$$\eta_t\sim MVN(0, \Sigma)$$
 $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 
 ### Model 2
@@ -100,6 +102,7 @@ Using Negative binomial distribution
 
 $$[y|r,p] = NB(r, p)$$
 $$\eta_s\sim MVN(0, \Sigma)$$
+$$\eta_t\sim MVN(0, \Sigma)$$
 $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 ### Model 3
 
@@ -111,37 +114,66 @@ Using zero inflated poisson distribution
 
 $$[y|p, \lambda]=ZIP(p,\lambda)$$
 $$\eta_s\sim MVN(0, \Sigma)$$
+$$P(y=0) = p\cdot e^{-0} + (1-p) \cdot e^{-{\lambda}}$$
+$$P(y = k) = (1-p) \cdot \frac{(e^{-{\lambda}}{\lambda^k})}{k!}, k \in N$$
+$${\lambda} > 0, p \in (0,1)$$
 $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 
 ##2. For the three statistical models you proposed in question #1, propose a way to measure the accuracy (and perhaps the calibration) of predictions.
 
-Mean square error and Mean absolute error
-
-$$MSE = \frac{1}{n} \sum^n_{i=1}{(Y_i - \hat{Y}_i)^2}$$
+Mean absolute error(MAE), Mean square error (MSE) and Akaike information criteria (AIC)
 
 $$MAE = \frac{\sum^n_{i=1} |y_i - x_i|}{n}$$
+$$MSE = \frac{1}{n} \sum^n_{i=1}{(Y_i - \hat{Y}_i)^2}$$
+$$AIC = 2k - 2ln(\hat{L})$$
+
+
 ##3. Fit the three statistical models you proposed in question #1 to the English grain aphid abundance data.
+
+```{r}
+# Split df
+set.seed(100)
+df.sample <- sample(c(TRUE,FALSE), nrow(df1), replace=TRUE, prob=c(0.5,0.5))
+df.train <- df1[df.sample,]
+df.test <- df1[!df.sample,]
+```
+
+### Model 1
 
 ```{r}
 
 m1 <- gam(EGA ~ grass.perc + as.factor(year) + s(long,lat, bs = "gp"), 
-          family = poisson(link = "log"), data = df1)
+          family = poisson(link = "log"), data = df.train)
 
 summary(m1)
 
+```
+
+### Model 2
+
+```{r}
+
 m2 <- gam(EGA ~ grass.perc + as.factor(year) + s(long,lat, bs = "gp"), 
-          family = nb(theta = NULL,link = "log"), data = df1)
+          family = nb(theta = NULL,link = "log"), data = df.train)
 
 summary(m2)
 
+```
+
+### Model 3
+
+```{r}
+
 m3 <- gam(list(EGA ~ grass.perc + as.factor(year) + s(long,lat, bs = "gp"), ~ s(long,lat, bs = "gp")), 
-          family = ziplss(), data = df1)
+          family = ziplss(), data = df.train)
 
 summary(m3)
 
-AIC(m1, m2, m3)
+```
 
-# Predict
+### Create points for prediction
+
+```{r}
 
 newPoints <- st_sample(ks, size = 1000, type = "regular") %>% 
   as(., 'Spatial') %>% as.data.frame() %>% 
@@ -163,10 +195,42 @@ newPoints$predictions.m1 <- predict(m1, newdata = newPoints, type = "response")
 newPoints$predictions.m2 <- predict(m2, newdata = newPoints, type = "response")
 newPoints$predictions.m3 <- predict(m3, newdata = newPoints, type = "response")
 
+```
 
-# View the predictions
-pred <- st_as_sf(newPoints, coords = c("long", "lat"), crs = st_crs(ks), agr = 'constant')
+### Plot predictions
 
+```{r}
+# model 1
+ggplot() +
+  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m1))+
+  geom_sf(data = ks, fill = NA, color = 'black')+
+  scale_fill_viridis_c()+ 
+  labs(title = "Model 1 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
+  facet_wrap(~year, ncol = 1)+
+  theme_bw()
+
+```
+
+```{r}
+# model 2
+ggplot() +
+  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m2))+
+  geom_sf(data = ks, fill = NA, color = 'black')+
+  scale_fill_viridis_c()+ 
+  labs(title = "Model 2 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
+  facet_wrap(~year, ncol = 1)+
+  theme_bw()
+```
+
+```{r}
+#model 3
+ggplot() +
+  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m3))+
+  geom_sf(data = ks, fill = NA, color = 'black')+
+  scale_fill_viridis_c()+ 
+  labs(title = "Model 3 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
+  facet_wrap(~year, ncol = 1)+
+  theme_bw()
 ```
 
 ##4. For the three models you fit in question #3, which model makes the most accurate predictions? How good is the best model in real world terms? Remember we are trying to predict the number of English grain aphids, which is a count!
@@ -175,34 +239,57 @@ Model 2 makes the most accurate predictions.
 
 ```{r}
 
+pred.m1 <- predict(m1, newdata = df.test, type = "response")
+pred.m2 <- predict(m2, newdata = df.test, type = "response")
+pred.m3 <- predict(m3, newdata = df.test, type = "response")
+
+# Calculate AIC
 AIC(m1, m2, m3)
 
+# Calculate MAE
+mae.m1 <- mean(abs(df.test$EGA - pred.m1))
+mae.m2 <- mean(abs(df.test$EGA - pred.m2))
+mae.m3 <- mean(abs(df.test$EGA - pred.m3))
+
+# Calculate RMSE
+rmse.m1 <- sqrt(mean((df.test$EGA - pred.m1)^2))
+rmse.m2 <- sqrt(mean((df.test$EGA - pred.m2)^2))
+rmse.m3 <- sqrt(mean((df.test$EGA - pred.m3)^2))
+
+```
+
+```{r}
+m1_metric <- ggplot(df.test, aes(x = EGA)) +
+  geom_point(aes(y = pred.m1), color = "navy") +
+  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
+  labs(title = "Observed vs. Predicted EGA",
+       subtitle = "Model 1",
+       x = "Observed EGA",
+       y = "Predicted EGA")+
+  theme_bw()
+
+m2_metric <- ggplot(df.test, aes(x = EGA)) +
+  geom_point(aes(y = pred.m2), color = "darkgreen") +
+  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
+  labs(title = "Observed vs. Predicted EGA",
+       subtitle = "Model 2",
+       x = "Observed EGA",
+       y = "Predicted EGA")+
+  theme_bw()
+
+m3_metric <- ggplot(df.test, aes(x = EGA)) +
+  geom_point(aes(y = pred.m3), color = "tomato") +
+  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
+  labs(title = "Observed vs. Predicted EGA",
+       subtitle = "Model 3",
+       x = "Observed EGA",
+       y = "Predicted EGA")+
+  theme_bw()
+
+ggarrange(m1_metric, m2_metric, m3_metric, nrow = 1)
 ```
 
 ##5. Summarize your results using words, numerical values and figures/maps.
 
-```{r}
-
-# m1
-ggplot() +
-  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m1))+
-  scale_fill_viridis_c(values = c(0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1))+ 
-  labs(title = "Model 1 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
-  theme_bw()
-
-# m2
-ggplot() +
-  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m2))+
-  scale_fill_viridis_c()+ 
-  labs(title = "Model 2 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
-  theme_bw()
-
-#m3 
-ggplot() +
-  geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m3))+
-  scale_fill_viridis_c(values = c(0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1))+ 
-  labs(title = "Model 3 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
-  theme_bw()
-
-```
+I've decided  to split the data set into training and testing subsets, employing a more cautious division (50/50), aiming to evaluate predictive performance. In summary, the subsequent model, built upon the assumption of a negative binomial distribution for the process model, exhibited the best predictive accuracy. This superiority was evident in the forecasted visual representations and was further corroborated by the reduced values of AIC, MAE, and RMSE in comparison to m1 and m3.
 
