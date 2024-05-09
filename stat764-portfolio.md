@@ -1324,7 +1324,7 @@ hist(df1$grass.perc,col="grey",main="",xlab="% grassland within \n5 km at sample
 
 ![](activity3_files/figure-latex/unnamed-chunk-3-5.pdf)<!-- --> 
 
-##1. For the data on the abundance of English grain aphids, propose three different statistical models (or machine learning approach) that are capable of predicting the number of English grain aphids at any location within the state of Kansas at any time for the years 2014 and 2015. Make sure to write out the three statistical models using formal notation and fully describe each component using words.
+## 1. For the data on the abundance of English grain aphids, propose three different statistical models (or machine learning approach) that are capable of predicting the number of English grain aphids at any location within the state of Kansas at any time for the years 2014 and 2015. Make sure to write out the three statistical models using formal notation and fully describe each component using words.
 
 ### Model 1
 
@@ -1342,7 +1342,6 @@ $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 ### Model 2
 
 Data model
-
 $$Z = y$$
 Process model
 Using Negative binomial distribution
@@ -1354,7 +1353,6 @@ $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 ### Model 3
 
 Data model
-
 $$Z = y$$
 Process model
 Using zero inflated poisson distribution
@@ -1366,7 +1364,7 @@ $$P(y = k) = (1-p) \cdot \frac{(e^{-{\lambda}}{\lambda^k})}{k!}, k \in N$$
 $${\lambda} > 0, p \in (0,1)$$
 $$E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}$$
 
-##2. For the three statistical models you proposed in question #1, propose a way to measure the accuracy (and perhaps the calibration) of predictions.
+## 2. For the three statistical models you proposed in question #1, propose a way to measure the accuracy (and perhaps the calibration) of predictions.
 
 Mean absolute error(MAE), Mean square error (MSE) and Akaike information criteria (AIC)
 
@@ -1375,7 +1373,7 @@ $$MSE = \frac{1}{n} \sum^n_{i=1}{(Y_i - \hat{Y}_i)^2}$$
 $$AIC = 2k - 2ln(\hat{L})$$
 
 
-##3. Fit the three statistical models you proposed in question #1 to the English grain aphid abundance data.
+## 3. Fit the three statistical models you proposed in question #1 to the English grain aphid abundance data.
 
 
 ```r
@@ -1530,7 +1528,7 @@ newPoints$predictions.m3 <- predict(m3, newdata = newPoints, type = "response")
 ggplot() +
   geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m1))+
   geom_sf(data = ks, fill = NA, color = 'black')+
-  scale_fill_viridis_c()+ 
+  scale_fill_viridis_c(option = "plasma")+ 
   labs(title = "Model 1 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
   facet_wrap(~year, ncol = 1)+
   theme_bw()
@@ -1544,7 +1542,7 @@ ggplot() +
 ggplot() +
   geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m2))+
   geom_sf(data = ks, fill = NA, color = 'black')+
-  scale_fill_viridis_c()+ 
+  scale_fill_viridis_c(option = "plasma")+ 
   labs(title = "Model 2 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
   facet_wrap(~year, ncol = 1)+
   theme_bw()
@@ -1558,7 +1556,7 @@ ggplot() +
 ggplot() +
   geom_tile(data = newPoints, aes(x = long, y = lat, fill = predictions.m3))+
   geom_sf(data = ks, fill = NA, color = 'black')+
-  scale_fill_viridis_c()+ 
+  scale_fill_viridis_c(option = "plasma")+ 
   labs(title = "Model 3 - Abundance of English grain aphids", x = "Longitude", y = "Latitude")+
   facet_wrap(~year, ncol = 1)+
   theme_bw()
@@ -1566,7 +1564,7 @@ ggplot() +
 
 ![](activity3_files/figure-latex/unnamed-chunk-11-1.pdf)<!-- --> 
 
-##4. For the three models you fit in question #3, which model makes the most accurate predictions? How good is the best model in real world terms? Remember we are trying to predict the number of English grain aphids, which is a count!
+## 4. For the three models you fit in question #3, which model makes the most accurate predictions? How good is the best model in real world terms? Remember we are trying to predict the number of English grain aphids, which is a count!
 
 Model 2 makes the most accurate predictions.
 
@@ -1597,45 +1595,102 @@ mae.m3 <- mean(abs(df.test$EGA - pred.m3))
 rmse.m1 <- sqrt(mean((df.test$EGA - pred.m1)^2))
 rmse.m2 <- sqrt(mean((df.test$EGA - pred.m2)^2))
 rmse.m3 <- sqrt(mean((df.test$EGA - pred.m3)^2))
+
+# MAE:
+mae.m1
 ```
+
+```
+## [1] 37.94015
+```
+
+```r
+mae.m2
+```
+
+```
+## [1] 24.29216
+```
+
+```r
+mae.m3
+```
+
+```
+## [1] 35.37633
+```
+
+```r
+# RMSE
+rmse.m1
+```
+
+```
+## [1] 99.04343
+```
+
+```r
+rmse.m2
+```
+
+```
+## [1] 77.86172
+```
+
+```r
+rmse.m3
+```
+
+```
+## [1] 95.28032
+```
+
+### Plot observed vs. predicted
 
 
 ```r
 m1_metric <- ggplot(df.test, aes(x = EGA)) +
-  geom_point(aes(y = pred.m1), color = "navy") +
-  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
-  labs(title = "Observed vs. Predicted EGA",
-       subtitle = "Model 1",
+  geom_point(aes(y = pred.m1), fill = "navy", shape = 21) +
+  geom_line(aes(y = EGA), linetype = "dotted", color = "black") +
+  labs(title = "Model 1",
        x = "Observed EGA",
        y = "Predicted EGA")+
-  theme_bw()
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        aspect.ratio = 1,
+        text = element_text(size = 12))
 
 m2_metric <- ggplot(df.test, aes(x = EGA)) +
-  geom_point(aes(y = pred.m2), color = "darkgreen") +
-  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
-  labs(title = "Observed vs. Predicted EGA",
-       subtitle = "Model 2",
+  geom_point(aes(y = pred.m2), fill = "darkgreen", shape = 21) +
+  geom_line(aes(y = EGA), linetype = "dotted", color = "black") +
+  labs(title = "Model 2",
        x = "Observed EGA",
        y = "Predicted EGA")+
-  theme_bw()
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        aspect.ratio = 1,
+        text = element_text(size = 12))
 
 m3_metric <- ggplot(df.test, aes(x = EGA)) +
-  geom_point(aes(y = pred.m3), color = "tomato") +
-  geom_line(aes(y = EGA), linetype = "dashed", color = "black") +
-  labs(title = "Observed vs. Predicted EGA",
-       subtitle = "Model 3",
+  geom_point(aes(y = pred.m3), fill = "tomato", shape = 21) +
+  geom_line(aes(y = EGA), linetype = "dotted", color = "black") +
+  labs(title = "Model 3",
        x = "Observed EGA",
        y = "Predicted EGA")+
-  theme_bw()
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        aspect.ratio = 1,
+        text = element_text(size = 12))
 
 ggarrange(m1_metric, m2_metric, m3_metric, nrow = 1)
 ```
 
 ![](activity3_files/figure-latex/unnamed-chunk-13-1.pdf)<!-- --> 
 
-##5. Summarize your results using words, numerical values and figures/maps.
+## 5. Summarize your results using words, numerical values and figures/maps.
 
-I've decided  to split the data set into training and testing subsets, employing a more cautious division (50/50), aiming to evaluate predictive performance. In summary, the subsequent model, built upon the assumption of a negative binomial distribution for the process model, exhibited the best predictive accuracy. This superiority was evident in the forecasted visual representations and was further corroborated by the reduced values of AIC, MAE, and RMSE in comparison to m1 and m3.
+I've decided to split the data into training and testing subsets (50/50), aiming to evaluate predictive performance. In summary, the subsequent model, built upon the assumption of a negative binomial distribution for the process model (m2), exhibited the best predictive accuracy. This superiority was evident in the forecasted visual representations and was further corroborated by the reduced values of AIC, MAE, and RMSE in comparison to m1 and m3. Notably, 2014 exhibited a minimal abundance of EGA, whereas 2015 witnessed a notable concentration of EGA in the East region.
+
 
 
 <!--chapter:end:activity3.Rmd-->
