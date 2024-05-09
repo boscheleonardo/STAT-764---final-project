@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 6 Activity 3 | STAT764: Applied Spatio-temporal Statistics - Portfolio</title>
+<meta name="author" content="Leonardo L. Bosche">
+<meta name="description" content="6.1 Library library(sf) library(sp) library(raster) library(mgcv) library(ggplot2) library(dplyr) library(ggpubr)  6.2 Import KS map and aphid data # Download data on English grain aphid url &lt;-...">
+<meta name="generator" content="bookdown 0.39 with bs4_book()">
+<meta property="og:title" content="Chapter 6 Activity 3 | STAT764: Applied Spatio-temporal Statistics - Portfolio">
+<meta property="og:type" content="book">
+<meta property="og:description" content="6.1 Library library(sf) library(sp) library(raster) library(mgcv) library(ggplot2) library(dplyr) library(ggpubr)  6.2 Import KS map and aphid data # Download data on English grain aphid url &lt;-...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 6 Activity 3 | STAT764: Applied Spatio-temporal Statistics - Portfolio">
+<meta name="twitter:description" content="6.1 Library library(sf) library(sp) library(raster) library(mgcv) library(ggplot2) library(dplyr) library(ggpubr)  6.2 Import KS map and aphid data # Download data on English grain aphid url &lt;-...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.6.1/transition.js"></script><script src="libs/bs3compat-0.6.1/tabs.js"></script><script src="libs/bs3compat-0.6.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">STAT764: Applied Spatio-temporal Statistics - Portfolio</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> About</a></li>
+<li class="book-part">JOURNALS</li>
+<li><a class="" href="st-class---january-18th.html">1st class - January 18th</a></li>
+<li><a class="" href="nd-class---january-25th.html">2nd class - January 25th</a></li>
+<li><a class="" href="rd-class---january-30th.html">3rd class - January 30th</a></li>
+<li><a class="" href="th-class---february-1st.html">4th class - February 1st</a></li>
+<li><a class="" href="th-class---february-6th.html">5th class - February 6th</a></li>
+<li><a class="" href="th-class---february-8th.html">6th class - February 8th</a></li>
+<li><a class="" href="th-class---february-13th.html">7th class - February 13th</a></li>
+<li><a class="" href="th-class---february-15th.html">8th class - February 15th</a></li>
+<li><a class="" href="th-class---february-20th.html">9th class - February 20th</a></li>
+<li><a class="" href="th-class---february-22th.html">10th class - February 22th</a></li>
+<li><a class="" href="th-class---february-27th.html">11th class - February 27th</a></li>
+<li><a class="" href="th-class---february-29th.html">12th class - February 29th</a></li>
+<li><a class="" href="th-class---march-5th.html">13th class - March 5th</a></li>
+<li><a class="" href="th-class---march-7th.html">14th class - March 7th</a></li>
+<li><a class="" href="th-class---march-19th.html">15th class - March 19th</a></li>
+<li><a class="" href="th-class---march-21st.html">16th class - March 21st</a></li>
+<li><a class="" href="th-class---march-26th.html">17th class - March 26th</a></li>
+<li><a class="" href="th-class---march-28th.html">18th class - March 28th</a></li>
+<li><a class="" href="th-class---april-2nd.html">19th class - April 2nd</a></li>
+<li><a class="" href="th-class---april-4th.html">20th class - April 4th</a></li>
+<li><a class="" href="st-class---april-9th.html">21st class - April 9th</a></li>
+<li><a class="" href="nd-class---april-11th.html">22nd class - April 11th</a></li>
+<li><a class="" href="th-class---april-23th.html">25th class - April 23th</a></li>
+<li><a class="" href="th-class---april-25th.html">26th class - April 25th</a></li>
+<li><a class="" href="th-class---april-30th.html">27th class - April 30th</a></li>
+<li class="book-part">ACTIVITIES</li>
+<li><a class="" href="activity-1.html"><span class="header-section-number">4</span> Activity 1</a></li>
+<li><a class="" href="activity-2.html"><span class="header-section-number">5</span> Activity 2</a></li>
+<li><a class="active" href="activity-3.html"><span class="header-section-number">6</span> Activity 3</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="activity-3" class="section level1" number="6">
+<h1>
+<span class="header-section-number">6</span> Activity 3<a class="anchor" aria-label="anchor" href="#activity-3"><i class="fas fa-link"></i></a>
+</h1>
+<div id="library-2" class="section level2" number="6.1">
+<h2>
+<span class="header-section-number">6.1</span> Library<a class="anchor" aria-label="anchor" href="#library-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/">sp</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/">ggpubr</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="import-ks-map-and-aphid-data" class="section level2" number="6.2">
+<h2>
+<span class="header-section-number">6.2</span> Import KS map and aphid data<a class="anchor" aria-label="anchor" href="#import-ks-map-and-aphid-data"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download data on English grain aphid</span></span>
+<span></span>
+<span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://www.dropbox.com/scl/fi/9ymxt900s77uq50ca6dgc/Enders-et-al.-2018-data.csv?rlkey=0rxjwleenhgu0gvzow5p0x9xf&amp;dl=1"</span></span>
+<span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span>
+<span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="va">df1</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">]</span> <span class="co"># Keep only the data on English grain aphid</span></span>
+<span></span>
+<span><span class="va">pts.sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>long <span class="op">=</span> <span class="va">df1</span><span class="op">$</span><span class="va">long</span>,lat <span class="op">=</span> <span class="va">df1</span><span class="op">$</span><span class="va">lat</span>, </span>
+<span>                         count <span class="op">=</span> <span class="va">df1</span><span class="op">$</span><span class="va">EGA</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://edzer.github.io/sp/reference/coordinates.html">coordinates</a></span><span class="op">(</span><span class="va">pts.sample</span><span class="op">)</span> <span class="op">=</span><span class="op">~</span> <span class="va">long</span> <span class="op">+</span> <span class="va">lat</span></span>
+<span><span class="fu"><a href="https://edzer.github.io/sp/reference/is.projected.html">proj4string</a></span><span class="op">(</span><span class="va">pts.sample</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edzer.github.io/sp/reference/CRS-class.html">CRS</a></span><span class="op">(</span><span class="st">"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="data-visualization" class="section level2" number="6.3">
+<h2>
+<span class="header-section-number">6.3</span> Data visualization<a class="anchor" aria-label="anchor" href="#data-visualization"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download KS shapefile</span></span>
+<span><span class="va">ks</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/getData.html">getData</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"GADM"</span>, country<span class="op">=</span><span class="st">"USA"</span>, level<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME_1</span> <span class="op">==</span> <span class="st">"Kansas"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">coordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">df1</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"long"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">ks</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ks</span>, fill <span class="op">=</span> <span class="st">"grey90"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, size <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">21</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co">#scale_fill_viridis_c (option = "viridis", direction = -1) +</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Abundance of English Grain Aphids"</span>, x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">df1</span><span class="op">$</span><span class="va">EGA</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-3-2.png" width="672"></div>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download National Land Cover Database</span></span>
+<span><span class="va">url.nlcd</span> <span class="op">&lt;-</span> <span class="st">"https://www.dropbox.com/scl/fi/ew7yzm93aes7l8l37cn65/KS_2011_NLCD.img?rlkey=60ahyvxhq18gt0yr47tuq5fig&amp;dl=1"</span></span>
+<span><span class="va">rl.nlcd2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html">raster</a></span><span class="op">(</span><span class="va">url.nlcd</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Make raster file that contains pixels with value of 1 if grassland and </span></span>
+<span><span class="co"># zero if other type of land cover.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">rl.nlcd2011</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-3-3.png" width="672"></div>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rl.nlcd.grass</span> <span class="op">&lt;-</span> <span class="va">rl.nlcd2011</span></span>
+<span><span class="va">rl.nlcd.grass</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">rl.nlcd.grass</span><span class="op">[</span><span class="op">]</span><span class="op">==</span><span class="fl">71</span>,<span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span><span class="op">(</span><span class="va">rl.nlcd.grass</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-3-4.png" width="672"></div>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Calculate percentage of land area that is grassland withing 5 km of sampled location</span></span>
+<span><span class="va">df1</span><span class="op">$</span><span class="va">grass.perc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html">extract</a></span><span class="op">(</span><span class="va">rl.nlcd.grass</span>,<span class="va">pts.sample</span>,buffer<span class="op">=</span><span class="fl">5000</span><span class="op">)</span>,<span class="va">mean</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">df1</span><span class="op">$</span><span class="va">grass.perc</span>,col<span class="op">=</span><span class="st">"grey"</span>,main<span class="op">=</span><span class="st">""</span>,xlab<span class="op">=</span><span class="st">"% grassland within \n5 km at sample location"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-3-5.png" width="672"></div>
+<p>##1. For the data on the abundance of English grain aphids, propose three different statistical models (or machine learning approach) that are capable of predicting the number of English grain aphids at any location within the state of Kansas at any time for the years 2014 and 2015. Make sure to write out the three statistical models using formal notation and fully describe each component using words.</p>
+<div id="model-1" class="section level3" number="6.3.1">
+<h3>
+<span class="header-section-number">6.3.1</span> Model 1<a class="anchor" aria-label="anchor" href="#model-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Data model
+<span class="math display">\[Z = y\]</span>
+Process model
+Using Poisson distribution</p>
+<p><span class="math display">\[[y|\lambda] = Poisson(\lambda) \]</span></p>
+<p><span class="math display">\[\eta_s\sim MVN(0, \Sigma)\]</span>
+<span class="math display">\[\eta_t\sim MVN(0, \Sigma)\]</span>
+<span class="math display">\[E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}\]</span></p>
+</div>
+<div id="model-2" class="section level3" number="6.3.2">
+<h3>
+<span class="header-section-number">6.3.2</span> Model 2<a class="anchor" aria-label="anchor" href="#model-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Data model</p>
+<p><span class="math display">\[Z = y\]</span>
+Process model
+Using Negative binomial distribution</p>
+<p><span class="math display">\[[y|r,p] = NB(r, p)\]</span>
+<span class="math display">\[\eta_s\sim MVN(0, \Sigma)\]</span>
+<span class="math display">\[\eta_t\sim MVN(0, \Sigma)\]</span>
+<span class="math display">\[E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}\]</span>
+### Model 3</p>
+<p>Data model</p>
+<p><span class="math display">\[Z = y\]</span>
+Process model
+Using zero inflated poisson distribution</p>
+<p><span class="math display">\[[y|p, \lambda]=ZIP(p,\lambda)\]</span>
+<span class="math display">\[\eta_s\sim MVN(0, \Sigma)\]</span>
+<span class="math display">\[P(y=0) = p\cdot e^{-0} + (1-p) \cdot e^{-{\lambda}}\]</span>
+<span class="math display">\[P(y = k) = (1-p) \cdot \frac{(e^{-{\lambda}}{\lambda^k})}{k!}, k \in N\]</span>
+<span class="math display">\[{\lambda} &gt; 0, p \in (0,1)\]</span>
+<span class="math display">\[E(y)=e^{\beta_0+\beta_1\cdot X+\eta_s+\eta_t}\]</span></p>
+<p>##2. For the three statistical models you proposed in question #1, propose a way to measure the accuracy (and perhaps the calibration) of predictions.</p>
+<p>Mean absolute error(MAE), Mean square error (MSE) and Akaike information criteria (AIC)</p>
+<p><span class="math display">\[MAE = \frac{\sum^n_{i=1} |y_i - x_i|}{n}\]</span>
+<span class="math display">\[MSE = \frac{1}{n} \sum^n_{i=1}{(Y_i - \hat{Y}_i)^2}\]</span>
+<span class="math display">\[AIC = 2k - 2ln(\hat{L})\]</span></p>
+<p>##3. Fit the three statistical models you proposed in question #1 to the English grain aphid abundance data.</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Split df</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">df.sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">TRUE</span>,<span class="cn">FALSE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df1</span><span class="op">)</span>, replace<span class="op">=</span><span class="cn">TRUE</span>, prob<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df.train</span> <span class="op">&lt;-</span> <span class="va">df1</span><span class="op">[</span><span class="va">df.sample</span>,<span class="op">]</span></span>
+<span><span class="va">df.test</span> <span class="op">&lt;-</span> <span class="va">df1</span><span class="op">[</span><span class="op">!</span><span class="va">df.sample</span>,<span class="op">]</span></span></code></pre></div>
+</div>
+<div id="model-1-1" class="section level3" number="6.3.3">
+<h3>
+<span class="header-section-number">6.3.3</span> Model 1<a class="anchor" aria-label="anchor" href="#model-1-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">EGA</span> <span class="op">~</span> <span class="va">grass.perc</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">long</span>,<span class="va">lat</span>, bs <span class="op">=</span> <span class="st">"gp"</span><span class="op">)</span>, </span>
+<span>          family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html">poisson</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">df.train</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+## Family: poisson 
+## Link function: log 
+## 
+## Formula:
+## EGA ~ grass.perc + as.factor(year) + s(long, lat, bs = "gp")
+## 
+## Parametric coefficients:
+##                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -4.072721   0.508579  -8.008 1.17e-15 ***
+## grass.perc          -0.034166   0.001664 -20.538  &lt; 2e-16 ***
+## as.factor(year)2015  6.148542   0.500663  12.281  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##               edf Ref.df Chi.sq p-value    
+## s(long,lat) 31.45   31.8   5663  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =   0.67   Deviance explained = 81.1%
+## UBRE = 17.558  Scale est. = 1         n = 178</code></pre>
+</div>
+<div id="model-2-1" class="section level3" number="6.3.4">
+<h3>
+<span class="header-section-number">6.3.4</span> Model 2<a class="anchor" aria-label="anchor" href="#model-2-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">EGA</span> <span class="op">~</span> <span class="va">grass.perc</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">long</span>,<span class="va">lat</span>, bs <span class="op">=</span> <span class="st">"gp"</span><span class="op">)</span>, </span>
+<span>          family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/negbin.html">nb</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="cn">NULL</span>,link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">df.train</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+## Family: Negative Binomial(0.653) 
+## Link function: log 
+## 
+## Formula:
+## EGA ~ grass.perc + as.factor(year) + s(long, lat, bs = "gp")
+## 
+## Parametric coefficients:
+##                     Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -3.29390    0.61890  -5.322 1.03e-07 ***
+## grass.perc          -0.00141    0.00678  -0.208    0.835    
+## as.factor(year)2015  5.67995    0.59656   9.521  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##               edf Ref.df Chi.sq p-value    
+## s(long,lat) 8.356  11.02  224.3  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.263   Deviance explained = 72.7%
+## -REML = 493.04  Scale est. = 1         n = 178</code></pre>
+</div>
+<div id="model-3" class="section level3" number="6.3.5">
+<h3>
+<span class="header-section-number">6.3.5</span> Model 3<a class="anchor" aria-label="anchor" href="#model-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">EGA</span> <span class="op">~</span> <span class="va">grass.perc</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">long</span>,<span class="va">lat</span>, bs <span class="op">=</span> <span class="st">"gp"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">long</span>,<span class="va">lat</span>, bs <span class="op">=</span> <span class="st">"gp"</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>          family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/ziplss.html">ziplss</a></span><span class="op">(</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">df.train</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m3</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+## Family: ziplss 
+## Link function: identity identity 
+## 
+## Formula:
+## EGA ~ grass.perc + as.factor(year) + s(long, lat, bs = "gp")
+## ~s(long, lat, bs = "gp")
+## 
+## Parametric coefficients:
+##                       Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -3.5612020  0.9360800  -3.804 0.000142 ***
+## grass.perc          -0.0395195  0.0017325 -22.811  &lt; 2e-16 ***
+## as.factor(year)2015  5.5461797  0.9273705   5.981 2.22e-09 ***
+## (Intercept).1        0.0008942  0.1018556   0.009 0.992995    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##                  edf Ref.df  Chi.sq p-value    
+## s(long,lat)   30.937 31.330 4819.22 &lt; 2e-16 ***
+## s.1(long,lat)  2.485  2.891   15.84 0.00131 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Deviance explained = 78.1%
+## -REML = 1761.5  Scale est. = 1         n = 178</code></pre>
+</div>
+<div id="create-points-for-prediction" class="section level3" number="6.3.6">
+<h3>
+<span class="header-section-number">6.3.6</span> Create points for prediction<a class="anchor" aria-label="anchor" href="#create-points-for-prediction"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">newPoints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html">st_sample</a></span><span class="op">(</span><span class="va">ks</span>, size <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/methods/as.html">as</a></span><span class="op">(</span><span class="va">.</span>, <span class="st">'Spatial'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span><span class="st">"long"</span> <span class="op">=</span> <span class="st">"coords.x1"</span>, </span>
+<span>          <span class="st">"lat"</span> <span class="op">=</span> <span class="st">"coords.x2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html">cross_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'2014'</span>, <span class="st">'2015'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pts.sample</span><span class="op">&lt;-</span> <span class="va">newPoints</span></span>
+<span></span>
+<span><span class="fu"><a href="https://edzer.github.io/sp/reference/coordinates.html">coordinates</a></span><span class="op">(</span><span class="va">pts.sample</span><span class="op">)</span> <span class="op">=</span><span class="op">~</span> <span class="va">long</span> <span class="op">+</span> <span class="va">lat</span></span>
+<span><span class="fu"><a href="https://edzer.github.io/sp/reference/is.projected.html">proj4string</a></span><span class="op">(</span><span class="va">pts.sample</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edzer.github.io/sp/reference/CRS-class.html">CRS</a></span><span class="op">(</span><span class="st">"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate percentage of land area that is grassland withing 5 km of new points location</span></span>
+<span></span>
+<span><span class="va">newPoints</span><span class="op">$</span><span class="va">grass.perc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html">extract</a></span><span class="op">(</span><span class="va">rl.nlcd.grass</span>,<span class="va">pts.sample</span>,buffer<span class="op">=</span><span class="fl">5000</span><span class="op">)</span>,<span class="va">mean</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span></span>
+<span></span>
+<span><span class="co"># Step 2: Use predict() to obtain predictions</span></span>
+<span><span class="va">newPoints</span><span class="op">$</span><span class="va">predictions.m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m1</span>, newdata <span class="op">=</span> <span class="va">newPoints</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="va">newPoints</span><span class="op">$</span><span class="va">predictions.m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m2</span>, newdata <span class="op">=</span> <span class="va">newPoints</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="va">newPoints</span><span class="op">$</span><span class="va">predictions.m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m3</span>, newdata <span class="op">=</span> <span class="va">newPoints</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="plot-predictions" class="section level3" number="6.3.7">
+<h3>
+<span class="header-section-number">6.3.7</span> Plot predictions<a class="anchor" aria-label="anchor" href="#plot-predictions"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># model 1</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">newPoints</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">predictions.m1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ks</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Model 1 - Abundance of English grain aphids"</span>, x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># model 2</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">newPoints</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">predictions.m2</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ks</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Model 2 - Abundance of English grain aphids"</span>, x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-10-1.png" width="672"></div>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#model 3</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">newPoints</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, fill <span class="op">=</span> <span class="va">predictions.m3</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ks</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Model 3 - Abundance of English grain aphids"</span>, x <span class="op">=</span> <span class="st">"Longitude"</span>, y <span class="op">=</span> <span class="st">"Latitude"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">year</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-11-1.png" width="672"></div>
+<p>##4. For the three models you fit in question #3, which model makes the most accurate predictions? How good is the best model in real world terms? Remember we are trying to predict the number of English grain aphids, which is a count!</p>
+<p>Model 2 makes the most accurate predictions.</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pred.m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m1</span>, newdata <span class="op">=</span> <span class="va">df.test</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="va">pred.m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m2</span>, newdata <span class="op">=</span> <span class="va">df.test</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="va">pred.m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">m3</span>, newdata <span class="op">=</span> <span class="va">df.test</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate AIC</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span>, <span class="va">m3</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##          df      AIC
+## m1 34.44604 3764.439
+## m2 14.12373  980.207
+## m3 38.22045 3311.273</code></pre>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Calculate MAE</span></span>
+<span><span class="va">mae.m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mae.m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mae.m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate RMSE</span></span>
+<span><span class="va">rmse.m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m1</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">rmse.m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">rmse.m3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">df.test</span><span class="op">$</span><span class="va">EGA</span> <span class="op">-</span> <span class="va">pred.m3</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m1_metric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df.test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pred.m1</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"navy"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Observed vs. Predicted EGA"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Model 1"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Observed EGA"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Predicted EGA"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">m2_metric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df.test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pred.m2</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Observed vs. Predicted EGA"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Model 2"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Observed EGA"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Predicted EGA"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">m3_metric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df.test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">pred.m3</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"tomato"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">EGA</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Observed vs. Predicted EGA"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Model 3"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Observed EGA"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Predicted EGA"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">m1_metric</span>, <span class="va">m2_metric</span>, <span class="va">m3_metric</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="activity3_files/figure-html/unnamed-chunk-13-1.png" width="672"></div>
+<p>##5. Summarize your results using words, numerical values and figures/maps.</p>
+<p>I’ve decided to split the data set into training and testing subsets, employing a more cautious division (50/50), aiming to evaluate predictive performance. In summary, the subsequent model, built upon the assumption of a negative binomial distribution for the process model, exhibited the best predictive accuracy. This superiority was evident in the forecasted visual representations and was further corroborated by the reduced values of AIC, MAE, and RMSE in comparison to m1 and m3.</p>
+
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="activity-2.html"><span class="header-section-number">5</span> Activity 2</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#activity-3"><span class="header-section-number">6</span> Activity 3</a></li>
+<li><a class="nav-link" href="#library-2"><span class="header-section-number">6.1</span> Library</a></li>
+<li><a class="nav-link" href="#import-ks-map-and-aphid-data"><span class="header-section-number">6.2</span> Import KS map and aphid data</a></li>
+<li>
+<a class="nav-link" href="#data-visualization"><span class="header-section-number">6.3</span> Data visualization</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#model-1"><span class="header-section-number">6.3.1</span> Model 1</a></li>
+<li><a class="nav-link" href="#model-2"><span class="header-section-number">6.3.2</span> Model 2</a></li>
+<li><a class="nav-link" href="#model-1-1"><span class="header-section-number">6.3.3</span> Model 1</a></li>
+<li><a class="nav-link" href="#model-2-1"><span class="header-section-number">6.3.4</span> Model 2</a></li>
+<li><a class="nav-link" href="#model-3"><span class="header-section-number">6.3.5</span> Model 3</a></li>
+<li><a class="nav-link" href="#create-points-for-prediction"><span class="header-section-number">6.3.6</span> Create points for prediction</a></li>
+<li><a class="nav-link" href="#plot-predictions"><span class="header-section-number">6.3.7</span> Plot predictions</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/activity3.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/activity3.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>STAT764: Applied Spatio-temporal Statistics - Portfolio</strong>" was written by Leonardo L. Bosche. It was last built on 2024-05-09.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
